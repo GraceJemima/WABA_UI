@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPARC — WABA Reports</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --p:#6b21a8;--ph:#5b1a8a;--pl:#f3f0ff;--pc:#ede9f8;
+  --th:#2d3748;--bd:#e5e7eb;--tx:#111827;--mt:#6b7280;
+  --bg:#f3f4f6;--wh:#ffffff;
+  --gn:#16a34a;--rd:#dc2626;--am:#d97706;--bl:#2563eb;
+  --gnl:#dcfce7;--rdl:#fee2e2;--aml:#fef3c7;--bll:#dbeafe;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);display:flex;height:100vh;overflow:hidden;font-size:14px;}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:10px;}
+
+/* SIDEBAR */
+.sb{width:230px;min-width:230px;background:var(--wh);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-logo{padding:18px 20px 14px;border-bottom:1px solid var(--bd);}
+.logo-row{display:flex;align-items:center;line-height:1;}
+.lt{font-size:30px;font-weight:900;letter-spacing:1px;color:#3d4466;line-height:1;}
+.ls{display:inline-flex;align-items:center;justify-content:center;width:26px;height:30px;}
+.lsub{font-size:9.5px;color:#7c3aed;font-style:italic;margin-top:4px;}
+.ch{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--bd);}
+.wa-ic{width:34px;height:34px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ni{display:flex;align-items:center;gap:12px;padding:11px 20px;color:#374151;font-size:13.5px;cursor:pointer;transition:background .12s;}
+.ni:hover{background:#f9fafb;}
+.ni.on{background:var(--p);color:#fff;border-radius:6px;margin:2px 10px;padding:10px 12px;width:calc(100% - 20px);font-weight:600;}
+.ni svg{width:18px;height:18px;flex-shrink:0;opacity:.75;}.ni.on svg{opacity:1;}
+
+/* MAIN */
+.mn{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.tb{background:var(--wh);border-bottom:1px solid var(--bd);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:flex-end;flex-shrink:0;gap:14px;}
+.sab{border:1px solid var(--bd);border-radius:6px;padding:5px 12px;text-align:center;}
+.sl{font-size:10px;color:var(--mt);}.sv2{font-size:13px;font-weight:700;color:var(--p);}
+.st4{width:38px;height:38px;background:linear-gradient(135deg,#6b21a8,#9333ea);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.un{font-size:14px;font-weight:700;}.ue{font-size:11px;color:var(--mt);}
+
+/* CONTENT */
+.ct{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 28px;}
+
+/* Buttons */
+.btp{display:flex;align-items:center;gap:7px;background:var(--p);color:#fff;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;}
+.btp:hover{background:var(--ph);}
+.btg{display:flex;align-items:center;gap:7px;background:var(--wh);color:var(--mt);border:1px solid var(--bd);border-radius:6px;padding:9px 16px;font-size:13px;font-weight:500;cursor:pointer;}
+.btg:hover{border-color:var(--p);color:var(--p);}
+.btsm{padding:5px 12px;border:1px solid var(--bd);border-radius:5px;background:var(--wh);font-size:12px;color:var(--mt);cursor:pointer;}
+.btsm:hover{border-color:var(--p);color:var(--p);}
+
+/* Page header */
+.ph{background:var(--wh);border:1px solid var(--bd);border-radius:8px;padding:16px 24px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.ph h1{font-size:20px;font-weight:700;}
+
+/* FILTER BAR */
+.fb{background:var(--wh);border:1px solid var(--bd);border-radius:8px;padding:12px 20px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;}
+
+/* Date pill */
+.dp-pill{display:flex;align-items:center;gap:8px;background:var(--pl);border:1.5px solid #c4b5fd;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--p);cursor:pointer;white-space:nowrap;user-select:none;}
+.dp-pill .dx{margin-left:4px;opacity:.6;font-size:14px;}.dp-pill .dx:hover{opacity:1;color:var(--rd);}
+
+/* date popup */
+.dpop{display:none;position:fixed;background:var(--wh);border:1px solid var(--bd);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.15);z-index:9999;padding:16px 18px;min-width:300px;}
+.dpop.open{display:block;}
+.dpop h4{font-size:13px;font-weight:700;margin-bottom:12px;}
+.dpresets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.dpre{padding:5px 12px;border:1px solid var(--bd);border-radius:5px;font-size:12px;font-weight:500;color:var(--mt);cursor:pointer;background:var(--wh);}
+.dpre:hover,.dpre.on{background:var(--p);color:#fff;border-color:var(--p);}
+.drange{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.drange label{font-size:11px;font-weight:600;color:var(--mt);display:block;margin-bottom:3px;}
+.drange input{border:1px solid var(--bd);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--tx);outline:none;width:100%;}
+.drange input:focus{border-color:var(--p);}
+.dacts{display:flex;justify-content:flex-end;gap:8px;}
+.dapply{background:var(--p);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;}
+.dcancel{background:transparent;color:var(--mt);border:1px solid var(--bd);border-radius:6px;padding:7px 12px;font-size:13px;cursor:pointer;}
+
+/* Filter pills */
+.fpill{display:flex;align-items:center;gap:7px;border:1px solid var(--bd);border-radius:7px;background:var(--wh);padding:8px 14px;font-size:13px;color:var(--mt);cursor:pointer;white-space:nowrap;transition:all .12s;user-select:none;}
+.fpill:hover{border-color:var(--p);color:var(--p);}
+.fpill.on{border-color:var(--p);color:var(--p);background:var(--pl);font-weight:600;}
+.fpill svg{width:14px;height:14px;flex-shrink:0;}
+.fcnt{background:var(--p);color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:1px 6px;margin-left:2px;}
+.clrbtn{border:none;background:none;font-size:13px;font-weight:600;color:var(--tx);cursor:pointer;padding:8px 4px;}
+.clrbtn:hover{color:var(--rd);}
+.fsep{width:1px;height:24px;background:var(--bd);flex-shrink:0;margin:0 2px;}
+
+/* Dropdown */
+.fdd{display:none;position:fixed;background:var(--wh);border:1px solid var(--bd);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:9999;min-width:210px;max-height:240px;overflow-y:auto;padding:6px 0;}
+.fdd.open{display:block;}
+.fddsearch{padding:6px 10px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:6px;}
+.fddsearch input{border:none;outline:none;font-size:12.5px;color:var(--tx);background:transparent;width:100%;}
+.fddi{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;color:var(--tx);cursor:pointer;}
+.fddi:hover{background:var(--pl);color:var(--p);}
+.fddi.sel{color:var(--p);font-weight:500;}
+.fddi input[type=checkbox]{accent-color:var(--p);width:13px;height:13px;flex-shrink:0;}
+
+/* View toggle */
+.vtog{display:flex;align-items:center;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px;margin-left:auto;flex-wrap:nowrap;}
+.vb{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;color:var(--mt);cursor:pointer;border:none;background:transparent;white-space:nowrap;}
+.vb.on{background:var(--wh);color:var(--p);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+/* Results card */
+.rc{background:var(--wh);border:1px solid var(--bd);border-radius:8px;overflow:hidden;}
+.rh{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--bd);background:#fafafa;}
+.rhl{display:flex;align-items:center;gap:10px;}
+.rt{font-size:13.5px;font-weight:700;}
+.rct{font-size:12px;color:var(--mt);background:var(--bg);border-radius:20px;padding:2px 10px;}
+.rhr{display:flex;gap:8px;align-items:center;}
+
+/* Table */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:var(--th);}
+thead th{padding:10px 14px;text-align:left;font-size:12px;font-weight:600;color:#fff;white-space:nowrap;}
+tbody tr{border-bottom:1px solid #f0f0f5;transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#faf9ff;}
+tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
+.mono{font-family:monospace;}
+.muted{font-size:12px;color:var(--mt);}
+
+/* Funnel bar */
+.fbar{display:flex;height:6px;border-radius:4px;overflow:hidden;background:#f3f4f6;}
+.fs{height:100%;}
+.fnums{display:flex;gap:6px;margin-top:4px;}
+.fn{display:flex;align-items:center;gap:2px;font-size:10px;font-family:monospace;}
+.fd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* Rate bar */
+.rbar{display:flex;align-items:center;gap:6px;}
+.rbt{flex:1;height:5px;background:#f3f4f6;border-radius:4px;overflow:hidden;min-width:44px;}
+.rbf{height:100%;border-radius:4px;}
+.rbv{font-size:11px;font-weight:700;min-width:34px;text-align:right;font-family:monospace;}
+
+/* Conv bar */
+.cbar{display:flex;align-items:center;gap:5px;}
+.cbt{width:40px;height:5px;background:#f3f4f6;border-radius:4px;overflow:hidden;}
+.cbf{height:100%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:4px;}
+.cbv{font-size:11px;font-weight:700;color:var(--p);font-family:monospace;}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:3px;border-radius:20px;padding:3px 8px;font-size:11px;font-weight:600;}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.b-read{background:var(--bll);color:var(--bl);}
+.b-dlvd{background:var(--gnl);color:var(--gn);}
+.b-fail{background:var(--rdl);color:var(--rd);}
+.b-pend{background:var(--aml);color:var(--am);}
+.b-comp{background:var(--gnl);color:var(--gn);}
+.b-proc{background:var(--aml);color:var(--am);}
+.b-stop{background:var(--rdl);color:var(--rd);}
+.b-optout{background:#fce7f3;color:#9d174d;}
+.b-reply{background:var(--bll);color:var(--bl);}
+.b-inbound{background:#f0fdf4;color:#15803d;}
+
+/* Chips */
+.chip{display:inline-flex;align-items:center;background:var(--pc);color:var(--p);font-size:11px;border-radius:4px;padding:2px 7px;font-weight:500;}
+.chip.auth{background:#fef3c7;color:#92400e;}
+.chip.mktg{background:#fce7f3;color:#9d174d;}
+.chip.util{background:var(--bll);color:#1e40af;}
+
+/* Quality */
+.qb{display:inline-flex;align-items:center;gap:3px;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:700;font-family:monospace;}
+.qg{background:var(--gnl);color:#166534;}
+.qy{background:var(--aml);color:#854d0e;}
+.qr{background:var(--rdl);color:#991b1b;}
+
+/* Table footer */
+.tf{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--bd);background:#fafafa;}
+.ti{font-size:12px;color:var(--mt);}
+.pagi{display:flex;gap:4px;}
+.pg{width:28px;height:28px;border:1px solid var(--bd);border-radius:5px;background:var(--wh);font-size:12px;color:var(--mt);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pg.on{background:var(--p);color:#fff;border-color:var(--p);}
+.pg:hover:not(.on){border-color:var(--p);color:var(--p);}
+
+/* Empty state */
+.empty{padding:48px 20px;text-align:center;color:var(--mt);font-size:13px;}
+.empty svg{opacity:.2;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;}
+
+/* Summary sections */
+.shdr{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--bd);background:#fafafa;}
+.stit{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.sdot{width:7px;height:7px;border-radius:50%;}
+.sgap{height:8px;background:var(--bg);}
+
+/* View panels */
+.vp{display:none;}.vp.on{display:block;}
+
+/* ── CREATE REPORT PAGE ── */
+#crp-page{display:none;background:var(--bg);}
+.crp-bc{background:var(--wh);border:1px solid var(--bd);border-radius:8px;padding:14px 24px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.crp-bk{color:var(--p);font-weight:500;cursor:pointer;font-size:14px;}.crp-bk:hover{text-decoration:underline;}
+.crp-sep{color:#9ca3af;font-size:16px;}.crp-cur{font-weight:700;color:var(--tx);font-size:15px;}
+.crp-card{background:var(--wh);border:1px solid var(--bd);border-radius:8px;padding:28px;}
+.crp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-bottom:20px;}
+.cf{display:flex;flex-direction:column;gap:5px;}
+.cl{font-size:13px;font-weight:500;color:var(--tx);}
+.cl sup{color:var(--rd);}
+.ci{border:1.5px solid #d1d5db;border-radius:7px;padding:11px 14px;font-size:14px;color:var(--tx);background:#eef2ff;outline:none;font-family:inherit;font-weight:500;transition:border-color .15s;}
+.ci:focus{border-color:var(--p);}
+.ci.err{border-color:var(--rd);background:#fff5f5;}
+.csel{position:relative;}
+.csel .ci{appearance:none;cursor:pointer;padding-right:36px;}
+.csel::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);border:5px solid transparent;border-top-color:#6b7280;border-bottom:none;pointer-events:none;}
+.cdw{position:relative;}
+.cdw .cico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#6b7280;pointer-events:none;}
+.cdw .ci{padding-left:38px;padding-right:36px;}
+.cdw .cclr{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;border:1.5px solid #9ca3af;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#9ca3af;font-size:12px;}
+.cdw .cclr:hover{border-color:var(--rd);color:var(--rd);}
+.camp-sec{margin-bottom:24px;}
+.camp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;min-height:10px;}
+.ctag{display:flex;align-items:center;gap:6px;background:var(--pc);border:1px solid #d8b8ff;border-radius:20px;padding:5px 12px;font-size:13px;color:var(--p);font-weight:500;}
+.ctag .rm{cursor:pointer;color:#a78bfa;}.ctag .rm:hover{color:var(--rd);}
+.cadd{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--p);border-radius:7px;background:var(--wh);padding:7px 16px;font-size:13px;color:var(--p);font-weight:600;cursor:pointer;}
+.cadd:hover{background:var(--pl);}
+.cpw{position:relative;display:inline-block;}
+.cpick{display:none;position:absolute;top:calc(100% + 6px);left:0;background:var(--wh);border:1px solid var(--bd);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:220px;max-height:200px;overflow-y:auto;padding:6px 0;}
+.cpick.open{display:block;}
+.cpi{padding:9px 16px;font-size:13px;color:var(--tx);cursor:pointer;}
+.cpi:hover{background:var(--pl);color:var(--p);}
+.crp-foot{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding-top:20px;border-top:1px solid var(--bd);margin-top:4px;}
+.crp-can{padding:9px 24px;border:1.5px solid #d1d5db;border-radius:7px;background:var(--wh);font-size:13.5px;color:var(--tx);cursor:pointer;font-weight:500;}
+.crp-can:hover{border-color:var(--p);color:var(--p);}
+.crp-sav{display:flex;align-items:center;gap:8px;padding:9px 24px;border:none;border-radius:7px;background:var(--p);color:#fff;font-size:13.5px;font-weight:600;cursor:pointer;}
+.crp-sav:hover{background:var(--ph);}
+
+/* EXPORT TRAY */
+.tbg2{position:fixed;inset:0;background:rgba(0,0,0,.2);z-index:300;display:none;}
+.tbg2.open{display:block;}
+.etray{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--wh);border-radius:16px 16px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,.12);transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);padding-bottom:20px;}
+.etray.open{transform:translateY(0);}
+.eth{width:36px;height:4px;background:#d1d5db;border-radius:4px;margin:10px auto 0;}
+.ethead{display:flex;align-items:center;justify-content:space-between;padding:12px 24px 10px;border-bottom:1px solid var(--bd);}
+.ethead h3{font-size:15px;font-weight:700;}.etx{font-size:18px;color:var(--mt);cursor:pointer;}.etx:hover{color:var(--tx);}
+.etbody{padding:16px 24px;max-height:55vh;overflow-y:auto;}
+.etsec{margin-bottom:14px;}
+.etlbl{font-size:11px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;}
+.etcols{display:flex;flex-wrap:wrap;gap:8px;}
+.ctog{display:flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:12px;color:var(--tx);background:var(--wh);user-select:none;}
+.ctog:hover,.ctog.on{border-color:var(--p);color:var(--p);background:var(--pl);}
+.ctog.lk{opacity:.5;cursor:not-allowed;}
+.ctog input{accent-color:var(--p);width:12px;height:12px;}
+.etfmts{display:flex;gap:8px;}
+.fmtb{padding:8px 20px;border:1.5px solid var(--bd);border-radius:7px;background:var(--wh);font-size:12.5px;font-weight:600;color:var(--mt);cursor:pointer;}
+.fmtb.on{border-color:var(--p);color:var(--p);background:var(--pl);}
+.etfoot{display:flex;align-items:center;justify-content:space-between;padding:0 24px;margin-top:8px;}
+.etcnt{font-size:12px;color:var(--mt);}.etcnt strong{color:var(--p);}
+
+/* MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:400;display:none;align-items:center;justify-content:center;}
+.mbg.open{display:flex;}
+.modal{background:var(--wh);border-radius:12px;width:460px;max-width:94vw;box-shadow:0 20px 60px rgba(0,0,0,.15);overflow:hidden;}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--bd);}
+.mhd h3{font-size:15px;font-weight:700;}.mx{font-size:20px;color:var(--mt);cursor:pointer;}.mx:hover{color:var(--tx);}
+.mbdy{padding:18px 20px;}
+.mf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.mfl{font-size:12px;font-weight:600;color:var(--tx);}
+.mi{border:1px solid var(--bd);border-radius:7px;padding:9px 12px;font-size:13px;color:var(--tx);background:#f8f9ff;outline:none;font-family:inherit;}
+.mi:focus{border-color:var(--p);}
+.mft{padding:12px 20px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:10px;}
+
+/* CTR bar */
+.ctr-bar{display:flex;align-items:center;gap:5px;}
+.ctr-track{width:50px;height:5px;background:#f3f4f6;border-radius:4px;overflow:hidden;}
+.ctr-fill{height:100%;background:linear-gradient(90deg,#f9a8d4,#ec4899);border-radius:4px;}
+.ctr-val{font-size:11px;font-weight:700;color:#be185d;font-family:monospace;}
+
+/* Incoming message preview */
+.msg-preview{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--mt);}
+/* Error code cell */
+.err-wrap{position:relative;display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+.err-code{font-family:monospace;font-size:12px;font-weight:700;color:#dc2626;background:#fee2e2;border:1px solid #fca5a5;border-radius:4px;padding:2px 8px;white-space:nowrap;}
+.err-tip{display:none;position:fixed;background:#1e2433;color:#fff;font-size:12px;line-height:1.55;border-radius:8px;padding:12px 14px;width:270px;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;}
+.err-tip .ett{font-weight:700;color:#f87171;font-family:monospace;font-size:13px;margin-bottom:5px;}
+.err-tip .etd{color:#cbd5e1;font-size:12px;}
+.err-wrap:hover .err-tip{display:block;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb">
+  <div class="sb-logo">
+    <div class="logo-row"><span class="lt">SPA</span><span class="ls"><svg width="22" height="26" viewBox="0 0 20 20" fill="none"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z" fill="#8b3fc8"/></svg></span><span class="lt">RC</span></div>
+    <div class="lsub">Smart Platform for Automated Real-time Communication</div>
+  </div>
+  <div class="ch">
+    <div class="wa-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+    <span style="font-size:13px;font-weight:600;color:#111827;">WhatsApp Business</span>
+  </div>
+  <div style="padding:8px 0;">
+    <div class="ni" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
+    <div class="ni" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Campaigns</div>
+    <div class="ni" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Templates</div>
+    <div class="ni" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Consent</div>
+    <div class="ni" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Analytics</div>
+    <div class="ni on" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Reports</div>
+    <div class="ni" onclick="nc(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Media Library</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="mn">
+  <div class="tb">
+    <div class="sab"><div class="sl">Service Account</div><div class="sv2">Testbwa01</div></div>
+    <div style="font-size:12px;color:#6b7280;display:flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>919912341598</div>
+    <div class="st4"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="#fff"/></svg></div>
+    <div><div class="un">Grace Jemima</div><div class="ue">grace.jemima&#64;smartping.ai</div></div>
+    <span style="color:#6b7280;cursor:pointer;">&#8964;</span>
+  </div>
+
+  <div class="ct" id="ct">
+
+    <!-- ══ CREATE REPORT PAGE ══ -->
+    <div id="crp-page">
+      <div class="crp-bc"><span class="crp-bk" onclick="closeCRP()">Reports</span><span class="crp-sep">›</span><span class="crp-cur">Create A Report</span></div>
+      <div class="crp-card">
+        <div class="crp-grid">
+          <div class="cf"><label class="cl">Report Name <sup>*</sup></label><input class="ci" id="crp-n" placeholder="Report Name" type="text"></div>
+          <div class="cf"><label class="cl">Select Date Range <sup>*</sup></label>
+            <div class="cdw">
+              <svg class="cico" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input class="ci" id="crp-d" type="text" placeholder="Select Date Range" value="March 17, 2026 – March 23, 2026" readonly style="cursor:pointer">
+              <span class="cclr" onclick="document.getElementById('crp-d').value=''">✕</span>
+            </div>
+          </div>
+          <div class="cf"><label class="cl">Report Type <sup>*</sup></label><div class="csel"><select class="ci" id="crp-t"><option value="">Select Type</option><option>Campaign</option><option>Engagement</option></select></div></div>
+          <div class="cf"><label class="cl">Categories <sup>*</sup></label><div class="csel"><select class="ci" id="crp-c"><option value="">Select Category</option><option>Authentication</option><option>Marketing</option><option>Utility</option></select></div></div>
+        </div>
+        <div class="camp-sec">
+          <label class="cl" style="display:block;margin-bottom:8px;">Campaign List <sup style="color:var(--rd)">*</sup></label>
+          <div class="camp-tags" id="camp-tags"></div>
+          <div class="cpw">
+            <button class="cadd" onclick="toggleCP(event)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Add</button>
+            <div class="cpick" id="cpick">
+              <div class="cpi" onclick="addCamp('waba test')">waba test</div>
+              <div class="cpi" onclick="addCamp('Testing')">Testing</div>
+              <div class="cpi" onclick="addCamp('Exam Booster – GATE 2026')">Exam Booster – GATE 2026</div>
+              <div class="cpi" onclick="addCamp('test001')">test001</div>
+              <div class="cpi" onclick="addCamp('sale30')">sale30</div>
+              <div class="cpi" onclick="addCamp('Welcome Series Q1')">Welcome Series Q1</div>
+            </div>
+          </div>
+        </div>
+        <div class="crp-foot">
+          <button class="crp-can" onclick="closeCRP()">Cancel</button>
+          <button class="crp-sav" onclick="saveCRP()">Save <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REPORTS MAIN ══ -->
+    <div id="rmain">
+      <div class="ph">
+        <h1>Reports</h1>
+        <div style="display:flex;gap:10px;">
+          <button class="btg" onclick="openSch()"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Schedule Report</button>
+          <button class="btp" onclick="openCRP()"><svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Create New Report</button>
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="fb">
+        <!-- Date -->
+        <div class="dp-pill" onclick="toggleDP(event)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="dp-lbl">March 17, 2026 – March 23, 2026</span>
+          <span class="dx" onclick="event.stopPropagation();document.getElementById('dp-lbl').textContent='Select Date Range'">✕</span>
+        </div>
+        <div class="dpop" id="dp-pop" onclick="event.stopPropagation()">
+          <h4>Select Date Range</h4>
+          <div class="dpresets">
+            <button class="dpre" onclick="setDPre(this,'Today')">Today</button>
+            <button class="dpre" onclick="setDPre(this,'Yesterday')">Yesterday</button>
+            <button class="dpre on" onclick="setDPre(this,'Last7')">Last 7 Days</button>
+            <button class="dpre" onclick="setDPre(this,'Last30')">Last 30 Days</button>
+            <button class="dpre" onclick="setDPre(this,'Last90')">Last 90 Days</button>
+            <button class="dpre" onclick="setDPre(this,'Custom')">Custom</button>
+          </div>
+          <div class="drange" id="dp-custom" style="display:none">
+            <div><label>From</label><input type="date" id="dp-from" value="2026-03-17"></div>
+            <div><label>To</label><input type="date" id="dp-to" value="2026-03-23"></div>
+          </div>
+          <div class="dacts">
+            <button class="dcancel" onclick="document.getElementById('dp-pop').classList.remove('open')">Cancel</button>
+            <button class="dapply" onclick="applyDate()">Apply</button>
+          </div>
+        </div>
+
+        <div class="fsep"></div>
+
+        <!-- Campaign -->
+        <div class="fpill" id="fp-c" onclick="toggleDD(event,'dd-c',this)">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Campaign<span class="fcnt" id="cnt-c" style="display:none">0</span>
+        </div>
+        <div class="fdd" id="dd-c" onclick="event.stopPropagation()">
+          <div class="fddsearch"><svg width="12" height="12" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search campaigns..." oninput="filterDDI('dd-c',this.value)"></div>
+          <div class="fddi" onclick="pickF(this,'cnt-c','fp-c')"><input type="checkbox">waba test</div>
+          <div class="fddi" onclick="pickF(this,'cnt-c','fp-c')"><input type="checkbox">Testing</div>
+          <div class="fddi" onclick="pickF(this,'cnt-c','fp-c')"><input type="checkbox">Exam Booster – GATE 2026</div>
+          <div class="fddi" onclick="pickF(this,'cnt-c','fp-c')"><input type="checkbox">test001</div>
+          <div class="fddi" onclick="pickF(this,'cnt-c','fp-c')"><input type="checkbox">sale30</div>
+          <div class="fddi" onclick="pickF(this,'cnt-c','fp-c')"><input type="checkbox">Welcome Series Q1</div>
+        </div>
+
+        <!-- Template -->
+        <div class="fpill" id="fp-t" onclick="toggleDD(event,'dd-t',this)">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Template<span class="fcnt" id="cnt-t" style="display:none">0</span>
+        </div>
+        <div class="fdd" id="dd-t" onclick="event.stopPropagation()">
+          <div class="fddi" onclick="pickF(this,'cnt-t','fp-t')"><input type="checkbox">otp_basic_v2</div>
+          <div class="fddi" onclick="pickF(this,'cnt-t','fp-t')"><input type="checkbox">promo_richcard_v1</div>
+          <div class="fddi" onclick="pickF(this,'cnt-t','fp-t')"><input type="checkbox">welcome_util_v3</div>
+          <div class="fddi" onclick="pickF(this,'cnt-t','fp-t')"><input type="checkbox">auth_otp_v1</div>
+          <div class="fddi" onclick="pickF(this,'cnt-t','fp-t')"><input type="checkbox">flash_sale_mktg</div>
+        </div>
+
+        <!-- Category -->
+        <div class="fpill" id="fp-cat" onclick="toggleDD(event,'dd-cat',this)">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Category<span class="fcnt" id="cnt-cat" style="display:none">0</span>
+        </div>
+        <div class="fdd" id="dd-cat" onclick="event.stopPropagation()">
+          <div class="fddi" onclick="pickF(this,'cnt-cat','fp-cat')"><input type="checkbox">Authentication</div>
+          <div class="fddi" onclick="pickF(this,'cnt-cat','fp-cat')"><input type="checkbox">Marketing</div>
+          <div class="fddi" onclick="pickF(this,'cnt-cat','fp-cat')"><input type="checkbox">Utility</div>
+        </div>
+
+        <!-- Status -->
+        <div class="fpill" id="fp-s" onclick="toggleDD(event,'dd-s',this)">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Status<span class="fcnt" id="cnt-s" style="display:none">0</span>
+        </div>
+        <div class="fdd" id="dd-s" onclick="event.stopPropagation()">
+          <div class="fddi" onclick="pickF(this,'cnt-s','fp-s')"><input type="checkbox">Delivered</div>
+          <div class="fddi" onclick="pickF(this,'cnt-s','fp-s')"><input type="checkbox">Read</div>
+          <div class="fddi" onclick="pickF(this,'cnt-s','fp-s')"><input type="checkbox">Failed</div>
+          <div class="fddi" onclick="pickF(this,'cnt-s','fp-s')"><input type="checkbox">Pending</div>
+        </div>
+
+        <button class="clrbtn" onclick="clearAll()">Clear All</button>
+
+        <!-- View toggle — 6 views -->
+        <div class="vtog">
+          <button class="vb on" onclick="sv('vc',this)">Campaign Report</button>
+          <button class="vb" onclick="sv('vm',this)">By Message</button>
+          <button class="vb" onclick="sv('vs',this)">Summary</button>
+          <button class="vb" onclick="sv('vi',this)">Incoming</button>
+          <button class="vb" onclick="sv('vo',this)">Opt-Outs</button>
+        </div>
+      </div>
+
+      <!-- RESULTS CARD -->
+      <div class="rc">
+
+        <!-- ── BY CAMPAIGN ── -->
+        <div id="vc" class="vp on">
+          <div class="rh">
+            <div class="rhl"><span class="rt">Campaign Report</span><span class="rct" id="rct-vc">6 campaigns</span></div>
+            <div class="rhr">
+              <div style="display:flex;gap:5px;font-size:11px;color:#6b7280;align-items:center;">
+                <span style="width:7px;height:7px;background:#94a3b8;border-radius:2px;display:inline-block;"></span>Sent
+                <span style="width:7px;height:7px;background:#34d399;border-radius:2px;display:inline-block;margin-left:3px;"></span>Dlvd
+                <span style="width:7px;height:7px;background:#60a5fa;border-radius:2px;display:inline-block;margin-left:3px;"></span>Read
+                <span style="width:7px;height:7px;background:#f87171;border-radius:2px;display:inline-block;margin-left:3px;"></span>Fail
+              </div>
+              <button class="btg" style="padding:5px 12px;font-size:12px;" onclick="openExp()">↓ Export</button>
+            </div>
+          </div>
+          <div class="tw"><table>
+            <thead><tr>
+              <th>Campaign Name</th><th>Sent On</th><th>Category</th><th>Template</th><th>Payload Type</th>
+              <th>Submitted</th><th>Delivered</th><th>Read</th>
+              <th>Failed</th><th>Button Clicks</th><th>Conv. Windows</th><th>Status</th>
+            </tr></thead>
+            <tbody id="tbody-vc">
+              <tr data-campaign="waba test" data-category="marketing" data-template="promo_richcard_v1" data-status="completed" data-date="2026-03-23">
+                <td><strong>waba test</strong></td>
+                <td class="mono muted">23/03/26, 09:00 AM</td>
+                <td><span class="chip mktg">Marketing</span></td>
+                <td class="muted">promo_richcard_v1</td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td class="mono">82</td>
+                <td class="mono" style="color:#16a34a">32</td>
+                <td class="mono" style="color:#2563eb">32</td>
+                <td class="mono" style="color:#dc2626">33</td>
+                <td class="mono" style="color:#be185d">10</td>
+                <td class="mono" style="color:#7c3aed">40</td>
+                <td><span class="badge b-comp">Completed</span></td>
+              </tr>
+              <tr data-campaign="testing" data-category="authentication" data-template="auth_otp_v1" data-status="completed" data-date="2026-03-23">
+                <td><strong>Testing</strong></td>
+                <td class="mono muted">23/03/26, 11:57 AM</td>
+                <td><span class="chip auth">Authentication</span></td>
+                <td class="muted">auth_otp_v1</td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td class="mono">138</td>
+                <td class="mono" style="color:#16a34a">68</td>
+                <td class="mono" style="color:#2563eb">64</td>
+                <td class="mono" style="color:#dc2626">37</td>
+                <td class="mono" style="color:#9ca3af">—</td>
+                <td class="mono" style="color:#7c3aed">84</td>
+                <td><span class="badge b-comp">Completed</span></td>
+              </tr>
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-template="flash_sale_mktg" data-status="completed" data-date="2026-03-22">
+                <td><strong>Exam Booster – GATE 2026</strong></td>
+                <td class="mono muted">22/03/26, 10:00 AM</td>
+                <td><span class="chip mktg">Marketing</span></td>
+                <td class="muted">flash_sale_mktg</td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td class="mono">2,480</td>
+                <td class="mono" style="color:#16a34a">2,284</td>
+                <td class="mono" style="color:#2563eb">1,885</td>
+                <td class="mono" style="color:#dc2626">196</td>
+                <td class="mono" style="color:#be185d">845</td>
+                <td class="mono" style="color:#7c3aed">1,786</td>
+                <td><span class="badge b-comp">Completed</span></td>
+              </tr>
+              <tr data-campaign="sale30" data-category="utility" data-template="welcome_util_v3" data-status="completed" data-date="2026-03-21">
+                <td><strong>sale30</strong></td>
+                <td class="mono muted">21/03/26, 02:30 PM</td>
+                <td><span class="chip util">Utility</span></td>
+                <td class="muted">welcome_util_v3</td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td class="mono">540</td>
+                <td class="mono" style="color:#16a34a">518</td>
+                <td class="mono" style="color:#2563eb">437</td>
+                <td class="mono" style="color:#dc2626">22</td>
+                <td class="mono" style="color:#be185d">43</td>
+                <td class="mono" style="color:#7c3aed">454</td>
+                <td><span class="badge b-comp">Completed</span></td>
+              </tr>
+              <tr data-campaign="welcome series q1" data-category="utility" data-template="welcome_util_v3" data-status="completed" data-date="2026-03-20">
+                <td><strong>Welcome Series Q1</strong></td>
+                <td class="mono muted">20/03/26, 08:00 AM</td>
+                <td><span class="chip util">Utility</span></td>
+                <td class="muted">welcome_util_v3</td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td class="mono">1,140</td>
+                <td class="mono" style="color:#16a34a">1,107</td>
+                <td class="mono" style="color:#2563eb">1,003</td>
+                <td class="mono" style="color:#dc2626">33</td>
+                <td class="mono" style="color:#be185d">239</td>
+                <td class="mono" style="color:#7c3aed">1,037</td>
+                <td><span class="badge b-comp">Completed</span></td>
+              </tr>
+              <tr data-campaign="test001" data-category="authentication" data-template="auth_otp_v1" data-status="processing" data-date="2026-03-23">
+                <td><strong>test001</strong></td>
+                <td class="mono muted">23/03/26, 12:51 PM</td>
+                <td><span class="chip auth">Authentication</span></td>
+                <td class="muted">auth_otp_v1</td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td class="mono">320</td>
+                <td class="mono" style="color:#16a34a">282</td>
+                <td class="mono" style="color:#2563eb">224</td>
+                <td class="mono" style="color:#dc2626">38</td>
+                <td class="mono" style="color:#9ca3af">—</td>
+                <td class="mono" style="color:#7c3aed">176</td>
+                <td><span class="badge b-proc">Processing</span></td>
+              </tr>
+            </tbody>
+          </table></div>
+          <div class="tf"><span class="ti" id="ti-vc">6 campaigns · 4,700 messages</span><div class="pagi"><button class="pg on">1</button></div></div>
+        </div>
+
+        <!-- ── BY MESSAGE ── -->
+        <div id="vm" class="vp">
+          <div class="rh">
+            <div class="rhl"><span class="rt">Per-Message Delivery</span><span class="rct" id="rct-vm">5 messages</span></div>
+            <div class="rhr">
+              <div style="display:flex;align-items:center;gap:6px;border:1px solid #e5e7eb;border-radius:7px;padding:5px 10px;background:#fff;min-width:180px;">
+                <svg width="13" height="13" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input style="border:none;outline:none;font-size:12.5px;background:transparent;width:100%;" placeholder="Search mobile or msg ID..." oninput="searchMsg(this.value)">
+              </div>
+              <button class="btg" style="padding:5px 12px;font-size:12px;" onclick="openExp()">↓ Export</button>
+            </div>
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Mobile No.</th><th>Template</th><th>Campaign</th><th>Category</th><th>Payload Type</th><th>Message Type</th><th>Media URL</th><th>Button Clicked</th><th>Submitted At</th><th>Delivered At</th><th>Read At</th><th>Status</th><th>Error Code</th></tr></thead>
+            <tbody id="tbody-vm">
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-template="flash_sale_mktg" data-status="read" data-date="2026-03-23">
+                <td class="mono">+91 98765 43210</td><td class="muted">flash_sale_mktg</td><td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td><span class="chip" style="background:#f0fdf4;color:#166534;font-size:11px;">interactive</span></td>
+                <td style="max-width:140px;"><a href="https://prodbackendocmp.sparc.smartping.io/uploads/flash_sale_banner.jpg" target="_blank" style="font-size:11.5px;color:#2563eb;text-decoration:none;font-family:monospace;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="https://prodbackendocmp.sparc.smartping.io/uploads/flash_sale_banner.jpg">📎 flash_sale_banner.jpg</a></td>
+                <td><span class="chip" style="background:#fdf4ff;color:#a21caf;font-size:11px;">Buy Now</span></td>
+                <td class="mono muted">23/03/26, 12:51 PM</td><td class="mono muted">23/03/26, 12:52 PM</td><td class="mono muted">23/03/26, 12:54 PM</td><td><span class="badge b-read">Read</span></td>
+                <td style="color:#9ca3af;font-size:12px;">—</td>
+              </tr>
+              <tr data-campaign="testing" data-category="authentication" data-template="auth_otp_v1" data-status="delivered" data-date="2026-03-23">
+                <td class="mono">+91 87654 32109</td><td class="muted">auth_otp_v1</td><td>Testing</td><td><span class="chip auth">Authentication</span></td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td><span class="chip" style="background:#f0fdf4;color:#166534;font-size:11px;">text</span></td>
+                <td style="color:#9ca3af;font-size:12px;">—</td>
+                <td><span style="color:#9ca3af;font-size:12px;">—</span></td>
+                <td class="mono muted">23/03/26, 11:57 AM</td><td class="mono muted">23/03/26, 11:58 AM</td><td class="mono muted">—</td><td><span class="badge b-dlvd">Delivered</span></td>
+                <td style="color:#9ca3af;font-size:12px;">—</td>
+              </tr>
+              <tr data-campaign="sale30" data-category="utility" data-template="welcome_util_v3" data-status="read" data-date="2026-03-23">
+                <td class="mono">+91 76543 21098</td><td class="muted">welcome_util_v3</td><td>sale30</td><td><span class="chip util">Utility</span></td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td><span class="chip" style="background:#f0fdf4;color:#166534;font-size:11px;">interactive</span></td>
+                <td style="max-width:140px;"><a href="https://prodbackendocmp.sparc.smartping.io/uploads/sale30_offer.jpg" target="_blank" style="font-size:11.5px;color:#2563eb;text-decoration:none;font-family:monospace;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="https://prodbackendocmp.sparc.smartping.io/uploads/sale30_offer.jpg">📎 sale30_offer.jpg</a></td>
+                <td><span class="chip" style="background:#fdf4ff;color:#a21caf;font-size:11px;">View Offer</span></td>
+                <td class="mono muted">23/03/26, 11:30 AM</td><td class="mono muted">23/03/26, 11:31 AM</td><td class="mono muted">23/03/26, 11:33 AM</td><td><span class="badge b-read">Read</span></td>
+                <td style="color:#9ca3af;font-size:12px;">—</td>
+              </tr>
+              <tr data-campaign="waba test" data-category="marketing" data-template="promo_richcard_v1" data-status="failed" data-date="2026-03-23">
+                <td class="mono">+91 65432 10987</td><td class="muted">promo_richcard_v1</td><td>waba test</td><td><span class="chip mktg">Marketing</span></td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td><span class="chip" style="background:#f0fdf4;color:#166534;font-size:11px;">richCard</span></td>
+                <td style="max-width:140px;"><a href="https://prodbackendocmp.sparc.smartping.io/uploads/promo_richcard.jpg" target="_blank" style="font-size:11.5px;color:#2563eb;text-decoration:none;font-family:monospace;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="https://prodbackendocmp.sparc.smartping.io/uploads/promo_richcard.jpg">📎 promo_richcard.jpg</a></td>
+                <td><span style="color:#9ca3af;font-size:12px;">—</span></td>
+                <td class="mono muted">23/03/26, 10:44 AM</td><td class="mono muted">—</td><td class="mono muted">—</td><td><span class="badge b-fail">Failed</span></td>
+                <td>
+                  <div class="err-wrap" onmouseenter="positionTip(event,this)">
+                    <span class="err-code">400</span>
+                    <div class="err-tip" id="etip-1">
+                      <div class="ett">400 — Bad Request</div>
+                      <div class="etd">Invalid input data. The request parameters are malformed or missing required fields. Verify the campaign payload and template ID before retrying.</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-template="flash_sale_mktg" data-status="delivered" data-date="2026-03-23">
+                <td class="mono">+91 54321 09876</td><td class="muted">flash_sale_mktg</td><td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
+                <td><span class="chip" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Template</span></td>
+                <td><span class="chip" style="background:#f0fdf4;color:#166534;font-size:11px;">interactive</span></td>
+                <td style="max-width:140px;"><a href="https://prodbackendocmp.sparc.smartping.io/uploads/flash_sale_banner.jpg" target="_blank" style="font-size:11.5px;color:#2563eb;text-decoration:none;font-family:monospace;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="https://prodbackendocmp.sparc.smartping.io/uploads/flash_sale_banner.jpg">📎 flash_sale_banner.jpg</a></td>
+                <td><span style="color:#9ca3af;font-size:12px;">—</span></td>
+                <td class="mono muted">23/03/26, 10:20 AM</td><td class="mono muted">23/03/26, 10:21 AM</td><td class="mono muted">—</td><td><span class="badge b-dlvd">Delivered</span></td>
+                <td style="color:#9ca3af;font-size:12px;">—</td>
+              </tr>
+            </tbody>
+          </table></div>
+          <div class="tf"><span class="ti" id="ti-vm">Showing 5 of 4,700</span><div class="pagi"><button class="pg">‹</button><button class="pg on">1</button><button class="pg">2</button><button class="pg">…</button><button class="pg">94</button><button class="pg">›</button></div></div>
+        </div>
+
+        <!-- ── SUMMARY ── -->
+        <div id="vs" class="vp">
+          <!-- Business Initiated -->
+          <div class="shdr">
+            <div class="stit"><span class="sdot" style="background:var(--p)"></span>Business Initiated Conversations</div>
+            <button class="btsm" onclick="openExp()">↓ Download</button>
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Category</th><th>Submitted</th><th>Sent</th><th>Delivered</th><th>Read</th><th>Failed</th><th>Pending</th><th>Unread</th><th>Delivery %</th></tr></thead>
+            <tbody>
+              <tr><td><strong>AUTHENTICATION</strong></td><td class="mono">458</td><td class="mono">458</td><td class="mono">350</td><td class="mono">288</td><td class="mono" style="color:#dc2626">75</td><td class="mono">0</td><td class="mono">62</td><td><strong style="color:#16a34a">76.4%</strong></td></tr>
+              <tr><td><strong>MARKETING</strong></td><td class="mono">2,562</td><td class="mono">2,316</td><td class="mono">2,316</td><td class="mono">1,917</td><td class="mono" style="color:#dc2626">229</td><td class="mono">52</td><td class="mono">399</td><td><strong style="color:#d97706">90.4%</strong></td></tr>
+              <tr><td><strong>UTILITY</strong></td><td class="mono">1,680</td><td class="mono">1,625</td><td class="mono">1,625</td><td class="mono">1,440</td><td class="mono" style="color:#d97706">55</td><td class="mono">77</td><td class="mono">185</td><td><strong style="color:#16a34a">96.7%</strong></td></tr>
+              <tr style="background:#fafafa;font-weight:700"><td>TOTAL</td><td class="mono">4,700</td><td class="mono">4,399</td><td class="mono">4,291</td><td class="mono">3,645</td><td class="mono" style="color:#dc2626">359</td><td class="mono">129</td><td class="mono">646</td><td><strong style="color:#16a34a">91.3%</strong></td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="sgap"></div>
+
+          <!-- User Initiated -->
+          <div class="shdr">
+            <div class="stit"><span class="sdot" style="background:#2563eb"></span>User Initiated Conversations</div>
+            <button class="btsm" onclick="openExp()">↓ Download</button>
+          </div>
+          <div style="padding:10px 18px 6px;font-size:12px;color:#6b7280;background:#fafafa;border-bottom:1px solid var(--bd);">
+            Users who messaged your WABA number first — these open a 24h free-reply window and are charged differently by Meta.
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Category</th><th>User Messages Received</th><th>Replied By Agent</th><th>Not Replied</th><th>Avg. Response Time</th><th>Window Used %</th></tr></thead>
+            <tbody>
+              <tr><td><strong>AUTHENTICATION</strong></td><td class="mono">12</td><td class="mono">10</td><td class="mono" style="color:#d97706">2</td><td class="mono">4m 32s</td><td><strong style="color:#16a34a">83%</strong></td></tr>
+              <tr><td><strong>MARKETING</strong></td><td class="mono">847</td><td class="mono">803</td><td class="mono" style="color:#d97706">44</td><td class="mono">6m 18s</td><td><strong style="color:#16a34a">94%</strong></td></tr>
+              <tr><td><strong>UTILITY</strong></td><td class="mono">234</td><td class="mono">228</td><td class="mono" style="color:#d97706">6</td><td class="mono">3m 45s</td><td><strong style="color:#16a34a">97%</strong></td></tr>
+              <tr style="background:#fafafa;font-weight:700"><td>TOTAL</td><td class="mono">1,093</td><td class="mono">1,041</td><td class="mono" style="color:#d97706">52</td><td class="mono">5m 11s</td><td><strong style="color:#16a34a">95%</strong></td></tr>
+            </tbody>
+          </table></div>
+          <div class="tf"><span class="ti">Period: March 17 – March 23, 2026</span><div class="pagi"><button class="pg on">1</button></div></div>
+        </div>
+
+        <!-- ── INCOMING MESSAGES ── -->
+        <div id="vi" class="vp">
+          <div class="rh">
+            <div class="rhl"><span class="rt">Incoming / Reply Messages</span><span class="rct" id="rct-vi">8 messages</span></div>
+            <div class="rhr">
+              <div style="display:flex;align-items:center;gap:6px;border:1px solid #e5e7eb;border-radius:7px;padding:5px 10px;background:#fff;min-width:180px;">
+                <svg width="13" height="13" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input style="border:none;outline:none;font-size:12.5px;background:transparent;width:100%;" placeholder="Search mobile or message...">
+              </div>
+              <button class="btg" style="padding:5px 12px;font-size:12px;" onclick="openExp()">↓ Export</button>
+            </div>
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Mobile No.</th><th>Campaign</th><th>Category</th><th>Message Type</th><th>Message Preview</th><th>Received At</th><th>Type</th></tr></thead>
+            <tbody id="tbody-vi">
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-status="reply" data-date="2026-03-23">
+                <td class="mono">+91 98765 43210</td><td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Button Reply</span></td>
+                <td class="msg-preview">"Buy Now" button tapped</td>
+                <td class="mono muted">23/03/26, 12:54 PM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="sale30" data-category="utility" data-status="reply" data-date="2026-03-23">
+                <td class="mono">+91 76543 21098</td><td>sale30</td><td><span class="chip util">Utility</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Button Reply</span></td>
+                <td class="msg-preview">"View Offer" button tapped</td>
+                <td class="mono muted">23/03/26, 11:35 AM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="welcome series q1" data-category="utility" data-status="text" data-date="2026-03-23">
+                <td class="mono">+91 99887 76655</td><td>Welcome Series Q1</td><td><span class="chip util">Utility</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Text Reply</span></td>
+                <td class="msg-preview">Hi, when will the delivery arrive?</td>
+                <td class="mono muted">23/03/26, 10:52 AM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="testing" data-category="authentication" data-status="text" data-date="2026-03-23">
+                <td class="mono">+91 87654 32109</td><td>Testing</td><td><span class="chip auth">Authentication</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Text Reply</span></td>
+                <td class="msg-preview">Please resend OTP</td>
+                <td class="mono muted">23/03/26, 11:59 AM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-status="text">
+                <td class="mono">+91 77665 54433</td><td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Text Reply</span></td>
+                <td class="msg-preview">What is the course duration?</td>
+                <td class="mono muted">22/03/26, 02:14 PM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="welcome series q1" data-category="utility" data-status="text" data-date="2026-03-23">
+                <td class="mono">+91 66554 43322</td><td>Welcome Series Q1</td><td><span class="chip util">Utility</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Text Reply</span></td>
+                <td class="msg-preview">Thanks for the welcome message!</td>
+                <td class="mono muted">21/03/26, 09:10 AM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="sale30" data-category="utility" data-status="image" data-date="2026-03-21">
+                <td class="mono">+91 55443 32211</td><td>sale30</td><td><span class="chip util">Utility</span></td>
+                <td><span class="badge" style="background:#f0f9ff;color:#0369a1;font-size:10.5px;">Image</span></td>
+                <td class="msg-preview">[Image attachment]</td>
+                <td class="mono muted">21/03/26, 03:44 PM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-status="button" data-date="2026-03-22">
+                <td class="mono">+91 44332 21100</td><td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
+                <td><span class="badge b-reply" style="font-size:10.5px;">Button Reply</span></td>
+                <td class="msg-preview">"Learn More" button tapped</td>
+                <td class="mono muted">22/03/26, 11:01 AM</td>
+                <td><span class="badge b-inbound">Inbound</span></td>
+              </tr>
+            </tbody>
+          </table></div>
+          <div class="tf"><span class="ti" id="ti-vi">8 incoming messages</span><div class="pagi"><button class="pg on">1</button></div></div>
+        </div>
+
+        <!-- ── OPT-OUTS ── -->
+        <div id="vo" class="vp">
+          <div class="rh">
+            <div class="rhl">
+              <span class="rt">Opt-Outs & STOP Replies</span>
+              <span class="rct" id="rct-vo">5 opt-outs</span>
+              <span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">All auto-flagged for DND</span>
+            </div>
+            <div class="rhr"><button class="btg" style="padding:5px 12px;font-size:12px;" onclick="openExp()">↓ Export CSV</button></div>
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Mobile No.</th><th>Opt-Out Type</th><th>Campaign at Opt-Out</th><th>Category</th><th>Template Used</th><th>Timestamp</th><th>DND Status</th></tr></thead>
+            <tbody id="tbody-vo">
+              <tr data-campaign="waba test" data-category="marketing" data-status="stop" data-date="2026-03-23">
+                <td class="mono">+91 65432 10987</td>
+                <td><span class="badge b-stop">STOP Reply</span></td>
+                <td>waba test</td><td><span class="chip mktg">Marketing</span></td>
+                <td class="muted">promo_richcard_v1</td>
+                <td class="mono muted">23/03/26, 10:45 AM</td>
+                <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
+              </tr>
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-status="stop" data-date="2026-03-22">
+                <td class="mono">+91 33221 10099</td>
+                <td><span class="badge b-stop">STOP Reply</span></td>
+                <td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
+                <td class="muted">flash_sale_mktg</td>
+                <td class="mono muted">22/03/26, 04:12 PM</td>
+                <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
+              </tr>
+              <tr data-campaign="sale30" data-category="utility" data-status="optout" data-date="2026-03-21">
+                <td class="mono">+91 22110 09988</td>
+                <td><span class="badge b-optout">User Block</span></td>
+                <td>sale30</td><td><span class="chip util">Utility</span></td>
+                <td class="muted">welcome_util_v3</td>
+                <td class="mono muted">21/03/26, 01:30 PM</td>
+                <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
+              </tr>
+              <tr data-campaign="welcome series q1" data-category="utility" data-status="stop" data-date="2026-03-20">
+                <td class="mono">+91 11009 98877</td>
+                <td><span class="badge b-stop">STOP Reply</span></td>
+                <td>Welcome Series Q1</td><td><span class="chip util">Utility</span></td>
+                <td class="muted">welcome_util_v3</td>
+                <td class="mono muted">20/03/26, 09:05 AM</td>
+                <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
+              </tr>
+              <tr data-campaign="testing" data-category="authentication" data-status="spam" data-date="2026-03-23">
+                <td class="mono">+91 99001 12233</td>
+                <td><span class="badge b-optout">SPAM Report</span></td>
+                <td>Testing</td><td><span class="chip auth">Authentication</span></td>
+                <td class="muted">auth_otp_v1</td>
+                <td class="mono muted">23/03/26, 12:00 PM</td>
+                <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
+              </tr>
+            </tbody>
+          </table></div>
+          <div class="tf"><span class="ti" id="ti-vo">5 opt-outs this period</span><div class="pagi"><button class="pg on">1</button></div></div>
+        </div>
+
+      </div><!-- /rc -->
+    </div><!-- /rmain -->
+  </div><!-- /ct -->
+</div><!-- /mn -->
+
+<!-- SCHEDULE MODAL -->
+<div class="mbg" id="sch-modal" onclick="if(event.target===this)closeSch()">
+  <div class="modal">
+    <div class="mhd"><h3>Schedule Recurring Report</h3><span class="mx" onclick="closeSch()">✕</span></div>
+    <div class="mbdy">
+      <div class="mf"><label class="mfl">Report Name</label><input class="mi" placeholder="e.g. Weekly WABA Summary" type="text"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="mf"><label class="mfl">Frequency</label><select class="mi"><option>Daily</option><option selected>Weekly</option><option>Monthly</option></select></div>
+        <div class="mf"><label class="mfl">Delivery Time</label><input class="mi" type="time" value="08:00"></div>
+      </div>
+      <div class="mf"><label class="mfl">Send To (email)</label><input class="mi" type="email" value="grace.jemima@smartping.ai"></div>
+      <div class="mf"><label class="mfl">Scope</label><select class="mi"><option>All campaigns</option><option>Current filter selection</option></select></div>
+    </div>
+    <div class="mft"><button class="btg" onclick="closeSch()">Cancel</button><button class="btp" onclick="closeSch();alert('✅ Scheduled every Monday at 08:00.')">Save Schedule</button></div>
+  </div>
+</div>
+
+<!-- EXPORT TRAY -->
+<div class="tbg2" id="exp-bg" onclick="closeExp()"></div>
+<div class="etray" id="exp-tray">
+  <div class="eth"></div>
+  <div class="ethead"><h3>Export Report</h3><span class="etx" onclick="closeExp()">✕</span></div>
+  <div class="etbody">
+
+    <!-- Section 1: Core Identity -->
+    <div class="etsec">
+      <div class="etlbl">📋 Core Identity <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#9ca3af;font-size:10px;">(always included)</span></div>
+      <div class="etcols">
+        <div class="ctog on lk"><input type="checkbox" checked disabled><span>templateId</span></div>
+        <div class="ctog on lk"><input type="checkbox" checked disabled><span>templateName</span></div>
+        <div class="ctog on lk"><input type="checkbox" checked disabled><span>campaignName</span></div>
+        <div class="ctog on lk"><input type="checkbox" checked disabled><span>msisdn</span></div>
+        <div class="ctog on lk"><input type="checkbox" checked disabled><span>status</span></div>
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>messageId</span></div>
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>category</span></div>
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>wabaNumber</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>payloadType</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>messageType</span></div>
+      </div>
+    </div>
+
+    <!-- Section 2: Timestamps -->
+    <div class="etsec">
+      <div class="etlbl">🕐 Timestamps</div>
+      <div class="etcols">
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>submittedAt</span></div>
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>sentAt</span></div>
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>deliveredAt</span></div>
+        <div class="ctog on" onclick="togC(this)"><input type="checkbox" checked><span>readAt</span></div>
+      </div>
+    </div>
+
+    <!-- Section 3: Engagement & Clicks -->
+    <div class="etsec">
+      <div class="etlbl">👆 Engagement & Button Tracking</div>
+      <div class="etcols">
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>buttonClicked</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>buttonClickedAt</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>totalButtonClicks</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>ctr</span></div>
+      </div>
+    </div>
+
+    <!-- Section 4: Link Tracking -->
+    <div class="etsec">
+      <div class="etlbl">🔗 Link / URL Tracking</div>
+      <div style="font-size:11.5px;color:#6b7280;margin-bottom:8px;line-height:1.5;">
+        Any URL inside the message body or CTA button is tracked when clicked by the recipient.
+      </div>
+      <div class="etcols">
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>ctaUrl</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>ctaUrlClicked</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>ctaUrlClickedAt</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>ctaUrlClickCount</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>linkInBody</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>linkInBodyClicked</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>linkInBodyClickedAt</span></div>
+      </div>
+    </div>
+
+    <!-- Section 5: Attachment / Media Tracking -->
+    <div class="etsec">
+      <div class="etlbl">📎 Attachment & Media Tracking</div>
+      <div style="font-size:11.5px;color:#6b7280;margin-bottom:8px;line-height:1.5;">
+        Media attachments (images, videos, documents) sent with the message — tracked if opened or downloaded.
+      </div>
+      <div class="etcols">
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaUrl</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaType</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaFileName</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaOpened</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaOpenedAt</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaDownloaded</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>mediaDownloadedAt</span></div>
+      </div>
+    </div>
+
+    <!-- Section 6: Failure & Compliance -->
+    <div class="etsec">
+      <div class="etlbl">⚠️ Failure & Compliance</div>
+      <div class="etcols">
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>errorCode</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>failReason</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>optOutStatus</span></div>
+        <div class="ctog" onclick="togC(this)"><input type="checkbox"><span>dndFlagged</span></div>
+      </div>
+    </div>
+
+    <!-- Section 7: Format -->
+    <div class="etsec">
+      <div class="etlbl">📄 Format</div>
+      <div class="etfmts">
+        <button class="fmtb on" id="fc" onclick="setFmt('csv')">CSV</button>
+        <button class="fmtb" id="fx" onclick="setFmt('xlsx')">Excel (.xlsx)</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="etfoot"><span class="etcnt"><strong id="ecnt">10</strong> columns selected</span>
+    <button class="btp" onclick="doExp()"><svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</button>
+  </div>
+</div>
+
+<script>
+// ── SIDEBAR NAV ──
+function nc(el){document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));el.classList.add('on');}
+
+// ── VIEW SWITCH ──
+function sv(id,el){
+  document.querySelectorAll('.vb').forEach(b=>b.classList.remove('on'));el.classList.add('on');
+  document.querySelectorAll('.vp').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// ── DATE PICKER ──
+function toggleDP(e){
+  e.stopPropagation();
+  closeAllDD();
+  const pop=document.getElementById('dp-pop');
+  if(pop.classList.contains('open')){pop.classList.remove('open');return;}
+  const r=document.querySelector('.dp-pill').getBoundingClientRect();
+  pop.style.top=(r.bottom+6)+'px';pop.style.left=r.left+'px';
+  pop.classList.add('open');
+}
+// current date range — matches our sample data range by default
+let dateFrom = new Date('2026-03-17');
+let dateTo   = new Date('2026-03-23');
+
+function setDPre(el,p){
+  document.querySelectorAll('.dpre').forEach(b=>b.classList.remove('on'));el.classList.add('on');
+  document.getElementById('dp-custom').style.display=p==='Custom'?'grid':'none';
+  if(p==='Custom')return;
+  const today=new Date('2026-03-23'); // fixed "today" matching our data
+  const fmt=d=>d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  let f=new Date(today),t=new Date(today);
+  if(p==='Yesterday'){f=t=new Date(+today-864e5);}
+  else if(p==='Last7'){f=new Date(+today-6*864e5);}
+  else if(p==='Last30'){f=new Date(+today-29*864e5);}
+  else if(p==='Last90'){f=new Date(+today-89*864e5);}
+  dateFrom=f; dateTo=t;
+  document.getElementById('dp-lbl').textContent=fmt(f)+(f.getTime()===t.getTime()?'':' – '+fmt(t));
+  applyFilters();
+}
+function applyDate(){
+  if(document.getElementById('dp-custom').style.display==='grid'){
+    const fv=document.getElementById('dp-from').value;
+    const tv=document.getElementById('dp-to').value;
+    if(fv) dateFrom=new Date(fv);
+    if(tv) dateTo=new Date(tv);
+    const fmt=d=>d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    document.getElementById('dp-lbl').textContent=fmt(dateFrom)+' – '+fmt(dateTo);
+  }
+  document.getElementById('dp-pop').classList.remove('open');
+  applyFilters();
+}
+
+// ── FILTER DROPDOWNS ──
+function toggleDD(e,ddId,pill){
+  e.stopPropagation();
+  const dd=document.getElementById(ddId);
+  const isOpen=dd.classList.contains('open');
+  closeAllDD();
+  if(isOpen)return;
+  const r=pill.getBoundingClientRect();
+  dd.style.top=(r.bottom+6)+'px';dd.style.left=r.left+'px';
+  dd.classList.add('open');
+}
+function closeAllDD(){
+  document.querySelectorAll('.fdd').forEach(d=>d.classList.remove('open'));
+  document.getElementById('dp-pop').classList.remove('open');
+}
+document.addEventListener('click',closeAllDD);
+
+function pickF(item,cntId,pillId){
+  item.classList.toggle('sel');
+  item.querySelector('input').checked=item.classList.contains('sel');
+  const n=item.closest('.fdd').querySelectorAll('.sel').length;
+  const c=document.getElementById(cntId);c.textContent=n;c.style.display=n>0?'':'none';
+  document.getElementById(pillId).classList.toggle('on',n>0);
+  applyFilters();
+}
+function filterDDI(ddId,q){
+  document.querySelectorAll('#'+ddId+' .fddi').forEach(i=>{
+    i.style.display=i.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+function clearAll(){
+  document.querySelectorAll('.fddi').forEach(i=>{i.classList.remove('sel');const cb=i.querySelector('input');if(cb)cb.checked=false;});
+  ['cnt-c','cnt-t','cnt-cat','cnt-s'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='0';}});
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));
+  applyFilters();
+}
+
+// ── LIVE FILTERS ──
+function applyFilters(){
+  const camps  = getSel('dd-c');
+  const tmpls  = getSel('dd-t');
+  const cats   = getSel('dd-cat');
+  const stats  = getSel('dd-s'); // only applies to By Message
+
+  const from = new Date(dateFrom); from.setHours(0,0,0,0);
+  const to   = new Date(dateTo);   to.setHours(23,59,59,999);
+
+  // Campaign, Incoming, Opt-Outs — filter by camp / cat / tmpl / date (NOT status)
+  ['tbody-vc','tbody-vi','tbody-vo'].forEach(id=>{
+    const tbody=document.getElementById(id); if(!tbody)return;
+    let vis=0, total=0;
+    tbody.querySelectorAll('tr').forEach(row=>{
+      total++;
+      const camp =(row.dataset.campaign||'').toLowerCase();
+      const cat  =(row.dataset.category||'').toLowerCase();
+      const tmpl =(row.dataset.template||'').toLowerCase();
+      const rd   = row.dataset.date ? new Date(row.dataset.date) : null;
+      const dateOk = !rd || (rd>=from && rd<=to);
+      const ok =
+        dateOk &&
+        (camps.length===0 || camps.some(v=>camp.includes(v.toLowerCase()))) &&
+        (cats.length===0  || cats.some(v=>cat.includes(v.toLowerCase()))) &&
+        (tmpls.length===0 || tmpls.some(v=>tmpl.includes(v.toLowerCase())));
+      row.style.display = ok?'':'none';
+      if(ok) vis++;
+    });
+    updateCounts(id,vis,total);
+  });
+
+  // By Message — filter by all including status
+  const vmTbody = document.getElementById('tbody-vm'); if(!vmTbody)return;
+  let vis=0, total=0;
+  vmTbody.querySelectorAll('tr').forEach(row=>{
+    total++;
+    const camp =(row.dataset.campaign||'').toLowerCase();
+    const cat  =(row.dataset.category||'').toLowerCase();
+    const tmpl =(row.dataset.template||'').toLowerCase();
+    const stat =(row.dataset.status||'').toLowerCase();
+    const rd   = row.dataset.date ? new Date(row.dataset.date) : null;
+    const dateOk = !rd || (rd>=from && rd<=to);
+    const ok =
+      dateOk &&
+      (camps.length===0  || camps.some(v=>camp.includes(v.toLowerCase()))) &&
+      (cats.length===0   || cats.some(v=>cat.includes(v.toLowerCase()))) &&
+      (tmpls.length===0  || tmpls.some(v=>tmpl.includes(v.toLowerCase()))) &&
+      (stats.length===0  || stats.some(v=>stat.includes(v.toLowerCase())));
+    row.style.display = ok?'':'none';
+    if(ok) vis++;
+  });
+  updateCounts('tbody-vm',vis,total);
+}
+function updateCounts(id,vis,total){
+  const panel=id.replace('tbody-','');
+  const rct=document.getElementById('rct-'+panel);
+  const ti=document.getElementById('ti-'+panel);
+  if(rct) rct.textContent=vis+' of '+total+' shown';
+  if(ti)  ti.textContent=vis+' of '+total+' shown';
+}
+function getSel(ddId){
+  return [...document.querySelectorAll('#'+ddId+' .fddi.sel')].map(i=>i.textContent.trim());
+}
+
+// ── MESSAGE SEARCH ──
+function positionTip(e, wrap){
+  const tip = wrap.querySelector('.err-tip');
+  if(!tip) return;
+  const r = wrap.getBoundingClientRect();
+  tip.style.top  = (r.bottom + 6) + 'px';
+  tip.style.left  = Math.min(r.left, window.innerWidth - 285) + 'px';
+}
+function searchMsg(q){
+  document.querySelectorAll('#tbody-vm tr').forEach(row=>{
+    row.style.display=row.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+
+// ── CREATE REPORT ──
+const camps=new Set();
+function openCRP(){document.getElementById('rmain').style.display='none';document.getElementById('crp-page').style.display='block';document.getElementById('ct').scrollTo(0,0);}
+function closeCRP(){document.getElementById('crp-page').style.display='none';document.getElementById('rmain').style.display='block';}
+function toggleCP(e){e.stopPropagation();document.getElementById('cpick').classList.toggle('open');}
+function addCamp(name){
+  if(camps.has(name)){document.getElementById('cpick').classList.remove('open');return;}
+  camps.add(name);
+  const t=document.createElement('div');t.className='ctag';t.id='ctg_'+name.replace(/\W/g,'_');
+  t.innerHTML=name+'<span class="rm" onclick="remCamp(\''+name.replace(/'/g,"\\'")+'\')">✕</span>';
+  document.getElementById('camp-tags').appendChild(t);
+  document.getElementById('cpick').classList.remove('open');
+}
+function remCamp(name){camps.delete(name);const t=document.getElementById('ctg_'+name.replace(/\W/g,'_'));if(t)t.remove();}
+document.addEventListener('click',e=>{if(!e.target.closest('.cpw'))document.getElementById('cpick').classList.remove('open');});
+function saveCRP(){
+  const n=document.getElementById('crp-n').value.trim();
+  const ty=document.getElementById('crp-t').value;
+  const ca=document.getElementById('crp-c').value;
+  const d=document.getElementById('crp-d').value.trim();
+  ['crp-n','crp-t','crp-c','crp-d'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  let ok=true;
+  if(!n){document.getElementById('crp-n').classList.add('err');ok=false;}
+  if(!ty){document.getElementById('crp-t').classList.add('err');ok=false;}
+  if(!ca){document.getElementById('crp-c').classList.add('err');ok=false;}
+  if(!d){document.getElementById('crp-d').classList.add('err');ok=false;}
+  if(!ok)return;
+  document.getElementById('crp-n').value='';document.getElementById('crp-t').value='';document.getElementById('crp-c').value='';
+  camps.clear();document.getElementById('camp-tags').innerHTML='';
+  closeCRP();alert('✅ Report "'+n+'" queued successfully.');
+}
+
+// ── SCHEDULE ──
+function openSch(){document.getElementById('sch-modal').classList.add('open');}
+function closeSch(){document.getElementById('sch-modal').classList.remove('open');}
+
+// ── EXPORT ──
+function openExp(){document.getElementById('exp-bg').classList.add('open');document.getElementById('exp-tray').classList.add('open');}
+function closeExp(){document.getElementById('exp-bg').classList.remove('open');document.getElementById('exp-tray').classList.remove('open');}
+function togC(el){if(el.classList.contains('lk'))return;el.classList.toggle('on');el.querySelector('input').checked=el.classList.contains('on');document.getElementById('ecnt').textContent=document.querySelectorAll('#exp-tray .ctog.on').length;}
+let ef='csv';
+function setFmt(f){ef=f;document.getElementById('fc').classList.toggle('on',f==='csv');document.getElementById('fx').classList.toggle('on',f==='xlsx');}
+function doExp(){
+  const cols=[...document.querySelectorAll('#exp-tray .ctog.on span')].map(s=>s.textContent);
+  const csv=cols.join(',')+'\n+91919912341598,flash_sale_mktg,Exam Booster,READ,msg_001,2026-03-23T12:51:00Z';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:ef==='csv'?'text/csv':'application/vnd.ms-excel'}));
+  a.download='sparc_waba_report_'+new Date().toISOString().slice(0,10)+'.'+ef;a.click();closeExp();
+}
+</script>
+</body>
+</html>
