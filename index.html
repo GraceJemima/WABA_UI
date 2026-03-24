@@ -96,7 +96,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fddi input[type=checkbox]{accent-color:var(--p);width:13px;height:13px;flex-shrink:0;}
 
 /* View toggle */
-.vtog{display:flex;align-items:center;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px;margin-left:auto;flex-wrap:nowrap;}
+/* TABS ROW — above filters */
+.tabs-row{
+  display:flex;align-items:center;gap:2px;
+  background:var(--wh);border:1px solid var(--bd);border-radius:8px;
+  padding:6px 8px;margin-bottom:10px;
+}
+.tab-btn{
+  padding:10px 22px;border-radius:7px;border:none;background:transparent;
+  font-size:14px;font-weight:600;color:var(--mt);cursor:pointer;
+  transition:all .15s;white-space:nowrap;letter-spacing:0.1px;
+}
+.tab-btn:hover{background:#f3f4f6;color:var(--p);}
+.tab-btn.on{
+  background:var(--p);color:#fff;
+  box-shadow:0 2px 8px rgba(107,33,168,.25);
+}
+/* old vtog kept for compat but hidden */
+.vtog{display:none;}
 .vb{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;color:var(--mt);cursor:pointer;border:none;background:transparent;white-space:nowrap;}
 .vb.on{background:var(--wh);color:var(--p);box-shadow:0 1px 4px rgba(0,0,0,.1);}
 
@@ -359,7 +376,16 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
         </div>
       </div>
 
-      <!-- FILTER BAR -->
+      <!-- TABS ROW — above filters, bigger -->
+      <div class="tabs-row">
+        <button class="tab-btn on" onclick="sv('vc',this)">Campaign Report</button>
+        <button class="tab-btn" onclick="sv('vm',this)">By Message</button>
+        <button class="tab-btn" onclick="sv('vs',this)">Summary</button>
+        <button class="tab-btn" onclick="sv('vi',this)">Incoming</button>
+        <button class="tab-btn" onclick="sv('vo',this)">Opt-Outs</button>
+      </div>
+
+      <!-- FILTER BAR — below tabs -->
       <div class="fb">
         <!-- Date -->
         <div class="dp-pill" onclick="toggleDP(event)">
@@ -437,15 +463,6 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
         </div>
 
         <button class="clrbtn" onclick="clearAll()">Clear All</button>
-
-        <!-- View toggle — 6 views -->
-        <div class="vtog">
-          <button class="vb on" onclick="sv('vc',this)">Campaign Report</button>
-          <button class="vb" onclick="sv('vm',this)">By Message</button>
-          <button class="vb" onclick="sv('vs',this)">Summary</button>
-          <button class="vb" onclick="sv('vi',this)">Incoming</button>
-          <button class="vb" onclick="sv('vo',this)">Opt-Outs</button>
-        </div>
       </div>
 
       <!-- RESULTS CARD -->
@@ -762,7 +779,7 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
           <div class="tw"><table>
             <thead><tr><th>Mobile No.</th><th>Opt-Out Type</th><th>Campaign at Opt-Out</th><th>Category</th><th>Template Used</th><th>Timestamp</th><th>DND Status</th></tr></thead>
             <tbody id="tbody-vo">
-              <tr data-campaign="waba test" data-category="marketing" data-status="stop" data-date="2026-03-23">
+              <tr data-campaign="waba test" data-category="marketing" data-template="promo_richcard_v1" data-status="stop" data-date="2026-03-23">
                 <td class="mono">+91 65432 10987</td>
                 <td><span class="badge b-stop">STOP Reply</span></td>
                 <td>waba test</td><td><span class="chip mktg">Marketing</span></td>
@@ -770,7 +787,7 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
                 <td class="mono muted">23/03/26, 10:45 AM</td>
                 <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
               </tr>
-              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-status="stop" data-date="2026-03-22">
+              <tr data-campaign="exam booster – gate 2026" data-category="marketing" data-template="flash_sale_mktg" data-status="stop" data-date="2026-03-22">
                 <td class="mono">+91 33221 10099</td>
                 <td><span class="badge b-stop">STOP Reply</span></td>
                 <td>Exam Booster</td><td><span class="chip mktg">Marketing</span></td>
@@ -778,7 +795,7 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
                 <td class="mono muted">22/03/26, 04:12 PM</td>
                 <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
               </tr>
-              <tr data-campaign="sale30" data-category="utility" data-status="optout" data-date="2026-03-21">
+              <tr data-campaign="sale30" data-category="utility" data-template="welcome_util_v3" data-status="optout" data-date="2026-03-21">
                 <td class="mono">+91 22110 09988</td>
                 <td><span class="badge b-optout">User Block</span></td>
                 <td>sale30</td><td><span class="chip util">Utility</span></td>
@@ -786,7 +803,7 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
                 <td class="mono muted">21/03/26, 01:30 PM</td>
                 <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
               </tr>
-              <tr data-campaign="welcome series q1" data-category="utility" data-status="stop" data-date="2026-03-20">
+              <tr data-campaign="welcome series q1" data-category="utility" data-template="welcome_util_v3" data-status="stop" data-date="2026-03-20">
                 <td class="mono">+91 11009 98877</td>
                 <td><span class="badge b-stop">STOP Reply</span></td>
                 <td>Welcome Series Q1</td><td><span class="chip util">Utility</span></td>
@@ -794,7 +811,7 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
                 <td class="mono muted">20/03/26, 09:05 AM</td>
                 <td><span style="background:#fee2e2;color:#dc2626;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;">🚫 DND Flagged</span></td>
               </tr>
-              <tr data-campaign="testing" data-category="authentication" data-status="spam" data-date="2026-03-23">
+              <tr data-campaign="testing" data-category="authentication" data-template="auth_otp_v1" data-status="spam" data-date="2026-03-23">
                 <td class="mono">+91 99001 12233</td>
                 <td><span class="badge b-optout">SPAM Report</span></td>
                 <td>Testing</td><td><span class="chip auth">Authentication</span></td>
@@ -939,11 +956,39 @@ tbody td{padding:11px 14px;vertical-align:middle;font-size:13px;}
 // ── SIDEBAR NAV ──
 function nc(el){document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));el.classList.add('on');}
 
+// Apply filter visibility for default tab on load
+document.addEventListener('DOMContentLoaded', ()=>updateFilterVisibility('vc'));
+
 // ── VIEW SWITCH ──
 function sv(id,el){
-  document.querySelectorAll('.vb').forEach(b=>b.classList.remove('on'));el.classList.add('on');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
   document.querySelectorAll('.vp').forEach(p=>p.classList.remove('on'));
   document.getElementById(id).classList.add('on');
+  updateFilterVisibility(id);
+}
+
+function updateFilterVisibility(id){
+  const statusPill = document.getElementById('fp-s');
+  const statusDD   = document.getElementById('dd-s');
+  const datePill   = document.querySelector('.dp-pill');
+  const fsep       = document.querySelector('.fsep');
+  const campPill   = document.getElementById('fp-c');
+  const tmplPill   = document.getElementById('fp-t');
+  const catPill    = document.getElementById('fp-cat');
+  const clrBtn     = document.querySelector('.clrbtn');
+
+  // Show everything by default
+  [statusPill,datePill,fsep,campPill,tmplPill,catPill,clrBtn].forEach(el=>{if(el)el.style.display='';});
+
+  if(id==='vs'){
+    // Summary — hide ALL filters
+    [statusPill,statusDD,datePill,fsep,campPill,tmplPill,catPill,clrBtn].forEach(el=>{if(el)el.style.display='none';});
+  } else if(id==='vc' || id==='vi' || id==='vo'){
+    // Campaign Report, Incoming, Opt-Outs — hide Status
+    if(statusPill) statusPill.style.display='none';
+    if(statusDD)   statusDD.classList.remove('open');
+  }
 }
 
 // ── DATE PICKER ──
